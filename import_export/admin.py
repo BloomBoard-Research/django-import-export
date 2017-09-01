@@ -19,6 +19,7 @@ from django.template.defaultfilters import pluralize
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 
+from import_export.utils import DisableSignals
 from .forms import (
     ImportForm,
     ConfirmImportForm,
@@ -270,10 +271,11 @@ class ImportMixin(ImportExportMixinBase):
                 return HttpResponse(_(u"<h1>Imported file has a wrong encoding: %s</h1>" % e))
             except Exception as e:
                 return HttpResponse(_(u"<h1>%s encountered while trying to read file: %s</h1>" % (type(e).__name__, import_file.name)))
-            result = resource.import_data(dataset, dry_run=True,
-                                          raise_errors=False,
-                                          file_name=import_file.name,
-                                          user=request.user)
+            with DisableSignals:
+                result = resource.import_data(dataset, dry_run=True,
+                                              raise_errors=False,
+                                              file_name=import_file.name,
+                                              user=request.user)
 
             context['result'] = result
 
