@@ -293,7 +293,7 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         Calls :meth:`instance.delete` as long as ``dry_run`` is not set.
         """
         self.before_delete_instance(instance, dry_run)
-        if not using_transactions and dry_run:
+        if dry_run:
             # we don't have transactions and we want to do a dry_run
             pass
         else:
@@ -340,7 +340,7 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         Model instance need to have a primary key value before
         a many-to-many relationship can be used.
         """
-        if not using_transactions and dry_run:
+        if dry_run:
             # we don't have transactions and we want to do a dry_run
             pass
         else:
